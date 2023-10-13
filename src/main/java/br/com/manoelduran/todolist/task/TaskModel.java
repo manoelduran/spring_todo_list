@@ -29,4 +29,12 @@ public class TaskModel {
     private LocalDateTime finishedAt;
 
     private String priority;
+
+    public void setTitle(String title) throws Exception {
+        if (title.length() > 50) {
+            throw new Exception("The max length of title is 50.");
+        }
+        this.title = title;
+
+    }
 }

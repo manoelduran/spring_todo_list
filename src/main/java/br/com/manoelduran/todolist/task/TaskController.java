@@ -58,9 +58,21 @@ public class TaskController {
 
     @PutMapping("/{id}")
     public ResponseEntity put(@RequestBody TaskModel taskModel, @PathVariable UUID id, HttpServletRequest request) {
+
         var foundTask = this.taskRepository.findById(id).orElse(null);
+   if (foundTask == null) {
+            return ResponseEntity.status(404).body("Task not found!");
+        }
+        var userId = request.getAttribute("userId");
+
+        if (!foundTask.getUserId().equals(userId)) {
+            return ResponseEntity.status(400).body("You only can edit your tasks!");
+        }
+
         Utils.copyNonNullProperties(taskModel, foundTask);
+
         var updatedTask = this.taskRepository.save(foundTask);
+
         return ResponseEntity.status(200).body(updatedTask);
     }
 }
